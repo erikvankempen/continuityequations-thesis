@@ -30,8 +30,8 @@ data.merged <- merge( data.empty, data.raw, by = c("Date"), all.x=TRUE,
 data.merged[ is.na(data.merged) ] <- 0
 
 # Select observations for the training and validation subsets
-data.training <- data.merged[ 1:200, ]
-data.validation <- data.merged[  201:nrow(data.merged), ]
+data.training <- data.merged[ 1:2000, ]
+data.validation <- data.merged[  2001:nrow(data.merged), ]
 
 # The SEM is modeled by using the systemfit function
 model.sem.formulas <- as.list( NULL )
@@ -47,7 +47,9 @@ for ( col in seq( ncol( data.training ) ) ) {
 }
 model.sem <- systemfit( model.sem.formulas, method = "OLS" )
 
-model.lrm <- lm()
+# A linear model is created using the lm function. This models the invoiced
+# amounts based on ordered and shipped amounts.
+model.lrm <- lm(data.training$IS ~ data.training$SO + data.training$GS)
 
 
 # A multipe time series object is created by using the ts function on the merged
