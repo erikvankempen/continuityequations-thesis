@@ -30,32 +30,24 @@ data.merged <- merge( data.empty, data.raw, by = c("Date"), all.x=TRUE,
                       all.y=FALSE )
 data.merged[ is.na(data.merged) ] <- 0
 
+data.merged <- data.merged[, 2:4]
+
 # Select observations for the training and validation subsets
 data.training <- data.merged[ 1:200, ]
 data.validation <- data.merged[  201:nrow(data.merged), ]
 
 # The SEM is modeled by using the systemfit function
-model.sem.formulas <- as.list( NULL )
-for ( col in seq( ncol( data.training ) ) ) {
-  sem.formula = paste("data.training$",dimnames( data.training )[[2]][col], " ~ ")
-  for ( col.minor in seq( ncol( data.training ) ) ) {
-    if( col.minor != col ){
-      sem.formula <- paste( sem.formula, "+ data.training$",
-                            dimnames( data.training )[[2]][col.minor] )
-    }
-  }
-  model.sem.formulas = c( model.sem.formulas, as.formula( sem.formula ) )
-}
-model.sem <- systemfit( model.sem.formulas, method = "OLS" )
+model.sem.formulas = c(as.formula("SO ~ +IS + GS"), as.formula("GS ~ +SO + IS"), as.formula("IS ~ +SO + GS"))
+model.sem <- systemfit( model.sem.formulas, method = "OLS", data=data.training )
 
 # A linear model is created using the lm function. This models the invoiced
 # amounts based on ordered and shipped amounts.
-model.lrm <- lm(data.training$IS ~ data.training$SO + data.training$GS)
+model.lrm <- lm(IS ~ . , data=data.training)
 
 
 # A multipe time series object is created by using the ts function on the merged
 # data frame. This mts object can be used by the vars package for modeling.
-data.tseries <- ts( data = data.training[, 2:4] )
+data.tseries <- ts( data = data.merged )
 
 # The VAR is modeled by using the VAR function from the vars package based on
 # the mts object. A maximum lag can be provided and since trend and constant terms
