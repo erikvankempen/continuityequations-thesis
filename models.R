@@ -33,7 +33,8 @@ data.merged[ is.na(data.merged) ] <- 0
 data.merged <- data.merged[, 2:4]
 
 # Select observations for the training and validation subsets
-data.training <- data.merged[ 1:200, ]
+#data.training <- data.merged[ 1:200, ]
+data.training <- data.merged
 data.validation <- data.merged[  201:nrow(data.merged), ]
 
 # The SEM is modeled by using the systemfit function
