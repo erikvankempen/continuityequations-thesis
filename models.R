@@ -17,7 +17,7 @@ t.threshold   <- 2
 # Data is read from a CSV file. The data consists of daily aggregates of
 # quantities per process step. In this example there are three process steps:
 # SO: sales order; GS: goods shipped; IS: invoice sent
-data.raw <- read.csv( file="Data/Sales-Quantities.csv", sep=";", 
+data.raw <- read.csv( file="Data/Sales-NL01-Quantities.csv", sep=";", 
                       header=TRUE, colClasses=c('Date', 'numeric', 'numeric', 'numeric') )
 
 # Missing dates in the provided CSV files are filled by merging an empty
@@ -32,18 +32,20 @@ data.merged[ is.na(data.merged) ] <- 0
 
 data.merged <- data.merged[, 2:4]
 
+#data.merged <- sales.data
+
 # Select observations for the training and validation subsets
-#data.training <- data.merged[ 1:200, ]
-data.training <- data.merged
+data.training <- data.merged[ 1:200, ]
+#data.training <- data.merged
 data.validation <- data.merged[  201:nrow(data.merged), ]
 
 # The SEM is modeled by using the systemfit function
-model.sem.formulas = c(as.formula("SO ~ +IS + GS"), as.formula("GS ~ +SO + IS"), as.formula("IS ~ +SO + GS"))
+model.sem.formulas = c(as.formula("SO ~ +IS + GS"), as.formula("GS ~ +SO"), as.formula("IS ~ +GS"))
 model.sem <- systemfit( model.sem.formulas, method = "OLS", data=data.training )
 
 # A linear model is created using the lm function. This models the invoiced
 # amounts based on ordered and shipped amounts.
-model.lrm <- lm(IS ~ . , data=data.training)
+model.lrm <- lm(IS ~ .. , data=data.training)
 
 
 # A multipe time series object is created by using the ts function on the merged
@@ -54,7 +56,7 @@ data.tseries <- ts( data = data.merged )
 # the mts object. A maximum lag can be provided and since trend and constant terms
 # should not be included in the model, type is set to none. In this case the model
 # contains all of the variables restricted by lag.max (30) in this example.
-model.var <- VAR( data.tseries, p=1, lag.max=model.lag.max, type="none" )
+model.var <- VAR( data.tseries, p=2, lag.max=model.lag.max, type="none" )
 
 # The VAR model is restricted further to exclude all weakly correlated variables
 # from the model.
