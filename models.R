@@ -17,7 +17,9 @@ t.threshold   <- 2
 # Data is read from a CSV file. The data consists of daily aggregates of
 # quantities per process step. In this example there are three process steps:
 # SO: sales order; GS: goods shipped; IS: invoice sent
-data.raw <- read.csv( file="Data/Sales-NL01-Quantities.csv", sep=";", 
+data.file <- "Data/Sales-NL01-Quantities.csv"
+#data.file <- "Data/Sales-DE01-Quantities.csv"
+data.raw <- read.csv( file=data.file , sep=";", 
                       header=TRUE, colClasses=c('Date', 'numeric', 'numeric', 'numeric') )
 
 # Missing dates in the provided CSV files are filled by merging an empty
@@ -45,7 +47,7 @@ model.sem <- systemfit( model.sem.formulas, method = "OLS", data=data.training )
 
 # A linear model is created using the lm function. This models the invoiced
 # amounts based on ordered and shipped amounts.
-model.lrm <- lm(IS ~ .. , data=data.training)
+model.lrm <- lm(IS ~ . , data=data.training)
 
 
 # A multipe time series object is created by using the ts function on the merged

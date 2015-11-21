@@ -1,3 +1,11 @@
+# Load the systemfit library to create the SEM model
+# Load the vars library to be able to use VAR() and the predict() function
+# for VAR models. The zoo library is used for its time series functions
+require("systemfit")
+require("zoo")
+require("vars")
+require("tseries")
+
 # Determine number of detected anomalies prior to error injection
 data.test <- data.validation
 threshold <- 10000
@@ -33,16 +41,19 @@ model.lrm.pre.error.count <- nrow(subset(data.test.results, Actual <= lrm.lwr | 
 model.sem.pre.error.count <- nrow(subset(data.test.results, Actual <= sem.lwr | Actual >= sem.upr))
 model.var.pre.error.count <- nrow(subset(data.test.results, Actual <= var.lwr | Actual >= var.upr))
 model.rvar.pre.error.count <- nrow(subset(data.test.results, Actual <= rvar.lwr | Actual >= rvar.upr))
+model.combi.pre.error.count <- nrow(subset(data.test.results, (Actual <= lrm.lwr | Actual >= lrm.upr) & (Actual <= rvar.lwr | Actual >= rvar.upr)))
 
 
 model.lrm.T1.error.count <- NULL
 model.sem.T1.error.count <- NULL
 model.var.T1.error.count <- NULL
 model.rvar.T1.error.count <- NULL
+model.combi.T1.error.count <- NULL
 model.lrm.T2.error.count <- 0
 model.sem.T2.error.count <- 0
 model.var.T2.error.count <- 0
 model.rvar.T2.error.count <- 0
+model.combi.T2.error.count <- 0
 
 # Inject anomalies
 for( i in 1:repetitions){
@@ -58,11 +69,13 @@ for( i in 1:repetitions){
   model.sem.T1.error.count <- c(model.sem.T1.error.count, nrow(subset(data.test.injected[-sample.selection,], Actual <= sem.lwr | Actual >= sem.upr)))
   model.var.T1.error.count <- c(model.var.T1.error.count, nrow(subset(data.test.injected[-sample.selection,], Actual <= var.lwr | Actual >= var.upr)))
   model.rvar.T1.error.count <- c(model.rvar.T1.error.count, nrow(subset(data.test.injected[-sample.selection,], Actual <= rvar.lwr | Actual >= rvar.upr)))
+  model.combi.T1.error.count <- c(model.combi.T1.error.count, nrow(subset(data.test.injected[-sample.selection,], (Actual <= var.lwr | Actual >= var.upr) & (Actual <= rvar.lwr | Actual >= rvar.upr))))
   
   model.lrm.T2.error.count <- c(model.lrm.T2.error.count, nrow(subset(data.test.injected[sample.selection,], Actual >= lrm.lwr & Actual <= lrm.upr)))
   model.sem.T2.error.count <- c(model.sem.T2.error.count, nrow(subset(data.test.injected[sample.selection,], Actual >= sem.lwr & Actual <= sem.upr)))
   model.var.T2.error.count <- c(model.var.T2.error.count, nrow(subset(data.test.injected[sample.selection,], Actual >= var.lwr & Actual <= var.upr)))
   model.rvar.T2.error.count <- c(model.rvar.T2.error.count, nrow(subset(data.test.injected[sample.selection,], Actual >= rvar.lwr & Actual <= rvar.upr)))
+  model.combi.T2.error.count <- c(model.combi.T2.error.count, nrow(subset(data.test.injected[sample.selection,], Actual >= rvar.lwr & Actual <= rvar.upr)))
 }
 
 # Print results to screen
