@@ -5,6 +5,7 @@ require("systemfit")
 require("zoo")
 require("vars")
 require("tseries")
+require("forecast")
 
 # Some properties of the model have to be predefined.
 # model.lag.max: the maximum lag between all steps.
@@ -64,14 +65,15 @@ model.var <- VAR( data.tseries, p=2, lag.max=model.lag.max, type="none" )
 # from the model.
 model.var.restricted <- restrict( model.var, thresh=t.threshold, method = "ser" )
 
-# An optional GARCH model is created based on the garch function from the tseries
+# An ARIMA model is created based on the auto.arima function from the forecast
 # package
-#model.garch.so <- garch( data.training$SO, order = c(1, 1), series = NULL )
-#model.garch.gs <- garch( data.training$GS, order = c(1, 1), series = NULL )
-#model.garch.is <- garch( data.training$IS, order = c(1, 1), series = NULL )
+model.arima.so <- auto.arima(data.merged$SO, start.p = model.lag.max)
+model.arima.gs <- auto.arima(data.merged$GS, start.p = model.lag.max)
+model.arima.is <- auto.arima(data.merged$IS, start.p = model.lag.max)
 
 # Serveral built-in functions can be used to present the resulting models.
 summary( model.lrm )
 print( model.sem )
 summary( model.var )
 summary( model.var.restricted )
+summary( model.arima.is )
