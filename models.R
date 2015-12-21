@@ -6,6 +6,7 @@ require("zoo")
 require("vars")
 require("tseries")
 require("forecast")
+require("expsmooth")
 
 # Some properties of the model have to be predefined.
 # model.lag.max: the maximum lag between all steps.
@@ -18,8 +19,8 @@ t.threshold   <- 2
 # Data is read from a CSV file. The data consists of daily aggregates of
 # quantities per process step. In this example there are three process steps:
 # SO: sales order; GS: goods shipped; IS: invoice sent
-data.file <- "Data/Sales-NL01-Quantities.csv"
-#data.file <- "Data/Sales-DE01-Quantities.csv"
+#data.file <- "Data/Sales-NL01-Quantities.csv"
+data.file <- "Data/Sales-DE01-Quantities.csv"
 data.raw <- read.csv( file=data.file , sep=";", 
                       header=TRUE, colClasses=c('Date', 'numeric', 'numeric', 'numeric') )
 
@@ -71,9 +72,15 @@ model.arima.so <- auto.arima(data.merged$SO, start.p = model.lag.max)
 model.arima.gs <- auto.arima(data.merged$GS, start.p = model.lag.max)
 model.arima.is <- auto.arima(data.merged$IS, start.p = model.lag.max)
 
+# An ETS model is created based on the ets function from the forecast package
+model.ets.so <- ets(data.merged$SO)
+model.ets.gs <- ets(data.merged$GS)
+model.ets.is <- ets(data.merged$IS)
+
 # Serveral built-in functions can be used to present the resulting models.
 summary( model.lrm )
 print( model.sem )
 summary( model.var )
 summary( model.var.restricted )
 summary( model.arima.is )
+summary( model.ets.is )

@@ -19,6 +19,7 @@ model.sem.predictions <- predict( model.sem, data.test, interval="confidence" )
 model.var.predictions <- predict( model.var$varresult$IS, interval="confidence" )
 model.rvar.predictions <- predict( model.var.restricted$varresult$IS, interval="confidence" )
 model.arima.predictions <- data.frame(fitted(model.arima.is), fitted(model.arima.is) - threshold, fitted(model.arima.is) + threshold)
+model.ets.predictions <- data.frame(fitted.values(model.ets.is), fitted.values(model.ets.is) - threshold, fitted.values(model.ets.is) + threshold)
 
 # Re-align predictions, i.e. return only the last valid predictions
 valid.prediction.count <- length(model.lrm.predictions[,1])
@@ -27,19 +28,22 @@ model.sem.predictions <- as.data.frame(model.sem.predictions)
 model.var.predictions <- as.data.frame(model.var.predictions)
 model.rvar.predictions <- as.data.frame(model.rvar.predictions)
 model.arima.predictions <- as.data.frame(model.arima.predictions)
+model.ets.predictions <- as.data.frame(model.ets.predictions)
 
 
 model.sem.predictions <- model.sem.predictions[,c('eq3.pred', 'eq3.lwr', 'eq3.upr')]
 model.var.predictions <- model.var.predictions[(nrow(model.var.predictions)+1-valid.prediction.count):nrow(model.var.predictions),]
 model.rvar.predictions <- model.rvar.predictions[(nrow(model.rvar.predictions)+1-valid.prediction.count):nrow(model.rvar.predictions),]
 model.arima.predictions <- model.arima.predictions[(nrow(model.arima.predictions)+1-valid.prediction.count):nrow(model.arima.predictions),]
+model.ets.predictions <- model.ets.predictions[(nrow(model.ets.predictions)+1-valid.prediction.count):nrow(model.ets.predictions),]
 names(model.lrm.predictions) <- c('lrm.pred', 'lrm.lwr', 'lrm.upr')
 names(model.sem.predictions) <- c('sem.pred', 'sem.lwr', 'sem.upr')
 names(model.var.predictions) <- c('var.pred', 'var.lwr', 'var.upr')
 names(model.rvar.predictions) <- c('rvar.pred', 'rvar.lwr', 'rvar.upr')
 names(model.arima.predictions) <- c('arima.pred', 'arima.lwr', 'arima.upr')
-data.test.results <- data.frame(data.test$IS, model.lrm.predictions, model.sem.predictions, model.var.predictions, model.rvar.predictions, model.arima.predictions)
-names(data.test.results) <- c('Actual', names(model.lrm.predictions), names(model.sem.predictions), names(model.var.predictions), names(model.rvar.predictions), names(model.arima.predictions))
+names(model.ets.predictions) <- c('ets.pred', 'ets.lwr', 'ets.upr')
+data.test.results <- data.frame(data.test$IS, model.lrm.predictions, model.sem.predictions, model.var.predictions, model.rvar.predictions, model.arima.predictions, model.ets.predictions)
+names(data.test.results) <- c('Actual', names(model.lrm.predictions), names(model.sem.predictions), names(model.var.predictions), names(model.rvar.predictions), names(model.arima.predictions), names(model.ets.predictions))
 
 # Count number of detected anomalies prior to error injection (false positives)
 model.lrm.pre.error.count <- nrow(subset(data.test.results, Actual <= lrm.lwr | Actual >= lrm.upr))
@@ -48,6 +52,7 @@ model.var.pre.error.count <- nrow(subset(data.test.results, Actual <= var.lwr | 
 model.rvar.pre.error.count <- nrow(subset(data.test.results, Actual <= rvar.lwr | Actual >= rvar.upr))
 model.combi.pre.error.count <- nrow(subset(data.test.results, (Actual <= var.lwr | Actual >= var.upr) & (Actual <= rvar.lwr | Actual >= rvar.upr)))
 model.arima.pre.error.count <- nrow(subset(data.test.results, Actual <= arima.lwr | Actual >= arima.upr))
+model.ets.pre.error.count <- nrow(subset(data.test.results, Actual <= ets.lwr | Actual >= ets.upr))
 
 
 model.lrm.T1.error.count <- NULL
@@ -56,12 +61,14 @@ model.var.T1.error.count <- NULL
 model.rvar.T1.error.count <- NULL
 model.combi.T1.error.count <- NULL
 model.arima.T1.error.count <- NULL
+model.ets.T1.error.count <- NULL
 model.lrm.T2.error.count <- NULL
 model.sem.T2.error.count <- NULL
 model.var.T2.error.count <- NULL
 model.rvar.T2.error.count <- NULL
 model.combi.T2.error.count <- NULL
 model.arima.T2.error.count <- NULL
+model.ets.T2.error.count <- NULL
 
 # Inject anomalies
 for( i in 1:repetitions){
@@ -79,6 +86,7 @@ for( i in 1:repetitions){
   model.rvar.T1.error.count <- c(model.rvar.T1.error.count, nrow(subset(data.test.injected[-sample.selection,], Actual <= rvar.lwr | Actual >= rvar.upr)))
   model.combi.T1.error.count <- c(model.combi.T1.error.count, nrow(subset(data.test.injected[-sample.selection,], (Actual <= var.lwr | Actual >= var.upr) & (Actual <= rvar.lwr | Actual >= rvar.upr))))
   model.arima.T1.error.count <- c(model.arima.T1.error.count, nrow(subset(data.test.injected[-sample.selection,], Actual <= arima.lwr | Actual >= arima.upr)))
+  model.ets.T1.error.count <- c(model.ets.T1.error.count, nrow(subset(data.test.injected[-sample.selection,], Actual <= ets.lwr | Actual >= ets.upr)))
   
   model.lrm.T2.error.count <- c(model.lrm.T2.error.count, nrow(subset(data.test.injected[sample.selection,], Actual >= lrm.lwr & Actual <= lrm.upr)))
   model.sem.T2.error.count <- c(model.sem.T2.error.count, nrow(subset(data.test.injected[sample.selection,], Actual >= sem.lwr & Actual <= sem.upr)))
@@ -86,6 +94,7 @@ for( i in 1:repetitions){
   model.rvar.T2.error.count <- c(model.rvar.T2.error.count, nrow(subset(data.test.injected[sample.selection,], Actual >= rvar.lwr & Actual <= rvar.upr)))
   model.combi.T2.error.count <- c(model.combi.T2.error.count, nrow(subset(data.test.injected[sample.selection,], Actual >= rvar.lwr & Actual <= rvar.upr)))
   model.arima.T2.error.count <- c(model.arima.T2.error.count, nrow(subset(data.test.injected[sample.selection,], Actual >= arima.lwr & Actual <= arima.upr)))
+  model.ets.T2.error.count <- c(model.ets.T2.error.count, nrow(subset(data.test.injected[sample.selection,], Actual >= ets.lwr & Actual <= ets.upr)))
 }
 
 # Print results to screen
