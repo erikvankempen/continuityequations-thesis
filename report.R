@@ -27,6 +27,7 @@ cat('SEM:        ', mean(model.sem.T1.error.count), ' ( min: ', min(model.sem.T1
 cat('VAR:        ', mean(model.var.T1.error.count), ' ( min: ', min(model.var.T1.error.count),' max: ', max(model.var.T1.error.count), ' stdev: ', sd(model.var.T1.error.count), ' pre-test: ', model.var.pre.error.count,')\n')
 cat('RVAR:       ', mean(model.rvar.T1.error.count), ' ( min: ', min(model.rvar.T1.error.count),' max: ', max(model.rvar.T1.error.count), ' stdev: ', sd(model.rvar.T1.error.count), ' pre-test: ', model.rvar.pre.error.count,')\n')
 cat('RVAR->VAR:  ', mean(model.combi.T1.error.count), ' ( min: ', min(model.combi.T1.error.count),' max: ', max(model.combi.T1.error.count), ' stdev: ', sd(model.combi.T1.error.count), ' pre-test: ', model.combi.pre.error.count,')\n')
+cat('ARIMA(IS):  ', mean(model.arima.T1.error.count), ' ( min: ', min(model.arima.T1.error.count),' max: ', max(model.arima.T1.error.count), ' stdev: ', sd(model.arima.T1.error.count), ' pre-test: ', model.arima.pre.error.count,')\n')
 cat('\n')
 
 cat('Average of Type II (false negative) errors:\n')
@@ -35,3 +36,4 @@ cat('SEM:        ', mean(model.sem.T2.error.count), ' ( min: ', min(model.sem.T2
 cat('VAR:        ', mean(model.var.T2.error.count), ' ( min: ', min(model.var.T2.error.count),' max: ', max(model.var.T2.error.count), ' stdev: ', sd(model.var.T2.error.count), ' injected: ', injection.size,')\n')
 cat('RVAR:       ', mean(model.rvar.T2.error.count), ' ( min: ', min(model.rvar.T2.error.count),' max: ', max(model.rvar.T2.error.count), ' stdev: ', sd(model.rvar.T2.error.count), ' injected: ', injection.size,')\n')
 cat('RVAR->VAR:  ', mean(model.combi.T2.error.count), ' ( min: ', min(model.combi.T2.error.count),' max: ', max(model.combi.T2.error.count), ' stdev: ', sd(model.combi.T2.error.count), ' injected: ', injection.size,')\n')
+cat('ARIMA(IS):  ', mean(model.arima.T2.error.count), ' ( min: ', min(model.arima.T2.error.count),' max: ', max(model.arima.T2.error.count), ' stdev: ', sd(model.arima.T2.error.count), ' injected: ', injection.size,')\n')
