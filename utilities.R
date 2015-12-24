@@ -1,2 +1,12 @@
 library('xlsx')
-write.xlsx(data.test.results, 'results.xlsx')
+wb <- loadWorkbook("Results/table-results.xlsx")
+sht <- getSheets(wb)[[1]]
+addDataFrame(results.final.df[1:4,], sht, col.names=FALSE, row.names=FALSE, startRow=4, startColumn=2)
+addDataFrame(results.final.df[5:8,], sht, col.names=FALSE, row.names=FALSE, startRow=10, startColumn=2)
+addDataFrame(results.final.df[9:12,], sht, col.names=FALSE, row.names=FALSE, startRow=16, startColumn=2)
+#white.fill <- Fill(foregroundColor="white", backgroundColor="black", pattern="SOLID_FOREGROUND")
+#cellblock <- CellBlock(sht, startRow=4, startColumn=2, noRows=16, noColumns=4)
+#cellselection <- which(results.final.df[1:4,1:6]>-1, arr.ind=TRUE)
+#CB.setFill(cellblock, white.fill, rowIndex=cellselection[,1], colIndex=cellselection[,2])
+wb$setForceFormulaRecalculation(TRUE)
+saveWorkbook(wb, paste("Results/results", format(Sys.time(), "%Y-%m-%d_%H%M"),".xlsx"))
