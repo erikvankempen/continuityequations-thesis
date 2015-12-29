@@ -19,11 +19,11 @@ results.arima.vector <- c(model.arima.mape, repetitions, length(data.test[,1]), 
                           mean(model.arima.T1.error.count),  min(model.arima.T1.error.count), max(model.arima.T1.error.count), sd(model.arima.T1.error.count),
                           mean(model.arima.T2.error.count), min(model.arima.T2.error.count), max(model.arima.T2.error.count),
                           sd(model.arima.T2.error.count))
-results.combi.vector <- c(repetitions, length(data.test[,1]), injection.size, model.combi.pre.error.count, 
+results.combi.vector <- c(NA, repetitions, length(data.test[,1]), injection.size, model.combi.pre.error.count, 
                           mean(model.combi.T1.error.count), min(model.combi.T1.error.count), max(model.combi.T1.error.count), sd(model.combi.T1.error.count),
                           mean(model.combi.T2.error.count), min(model.combi.T2.error.count), max(model.combi.T2.error.count),
                           sd(model.combi.T2.error.count))
-results.combi2.vector <- c(repetitions, length(data.test[,1]), injection.size, model.combi2.pre.error.count, 
+results.combi2.vector <- c(NA, repetitions, length(data.test[,1]), injection.size, model.combi2.pre.error.count, 
                            mean(model.combi2.T1.error.count), min(model.combi2.T1.error.count), max(model.combi2.T1.error.count), sd(model.combi2.T1.error.count),
                            mean(model.combi2.T2.error.count), min(model.combi2.T2.error.count), max(model.combi2.T2.error.count),
                            sd(model.combi2.T2.error.count))
