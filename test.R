@@ -40,6 +40,14 @@ names(model.arima.predictions) <- c('arima.pred', 'arima.lwr', 'arima.upr')
 data.test.results <- data.frame(data.test$IS, model.lrm.predictions, model.sem.predictions, model.var.predictions, model.rvar.predictions, model.arima.predictions)
 names(data.test.results) <- c('Actual', names(model.lrm.predictions), names(model.sem.predictions), names(model.var.predictions), names(model.rvar.predictions), names(model.arima.predictions))
 
+# Calculate MAPE
+data.test.results.nonzero <- data.test.results[data.test.results$Actual != 0 & data.test.results$Actual > 0,]
+model.lrm.mape = mean(abs((data.test.results.nonzero$Actual - data.test.results.nonzero$lrm.pred)/data.test.results.nonzero$Actual))
+model.sem.mape = mean(abs((data.test.results.nonzero$Actual - data.test.results.nonzero$sem.pred)/data.test.results.nonzero$Actual))
+model.var.mape = mean(abs((data.test.results.nonzero$Actual - data.test.results.nonzero$var.pred)/data.test.results.nonzero$Actual))
+model.rvar.mape = mean(abs((data.test.results.nonzero$Actual - data.test.results.nonzero$rvar.pred)/data.test.results.nonzero$Actual))
+model.arima.mape = mean(abs((data.test.results.nonzero$Actual - data.test.results.nonzero$arima.pred)/data.test.results.nonzero$Actual))
+
 # Count number of detected anomalies prior to error injection (false positives)
 model.lrm.pre.error.count <- nrow(subset(data.test.results, Actual <= lrm.lwr | Actual >= lrm.upr))
 model.sem.pre.error.count <- nrow(subset(data.test.results, Actual <= sem.lwr | Actual >= sem.upr))
@@ -90,6 +98,3 @@ for( i in 1:repetitions){
   model.combi.T2.error.count <- c(model.combi.T2.error.count, nrow(subset(data.test.injected[sample.selection,], Actual >= rvar.lwr & Actual <= rvar.upr)))
   model.combi2.T2.error.count <- c(model.combi2.T2.error.count, nrow(subset(data.test.injected[sample.selection,], Actual >= rvar.lwr & Actual <= rvar.upr)))
 }
-
-# Print results to screen
-source('report.R')
