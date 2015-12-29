@@ -9,6 +9,7 @@
 .Rproj.user/
 .Rproj
 .RData
+utilities.R
 
 # produced vignettes
 vignettes/*.html
