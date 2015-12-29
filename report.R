@@ -1,36 +1,36 @@
 # Create results data frame
-results.lrm.vector <- c(repetitions, length(data.test[,1]), injection.size, model.lrm.pre.error.count,
+results.lrm.vector <- c(model.lrm.mape, repetitions, length(data.test[,1]), injection.size, model.lrm.pre.error.count,
                         mean(model.lrm.T1.error.count), min(model.lrm.T1.error.count), max(model.lrm.T1.error.count), sd(model.lrm.T1.error.count),
                         mean(model.lrm.T2.error.count), min(model.lrm.T2.error.count), max(model.lrm.T2.error.count),
                         sd(model.lrm.T2.error.count))
-results.sem.vector <- c(repetitions, length(data.test[,1]), injection.size, model.sem.pre.error.count, 
+results.sem.vector <- c(model.sem.mape, repetitions, length(data.test[,1]), injection.size, model.sem.pre.error.count, 
                         mean(model.sem.T1.error.count), min(model.sem.T1.error.count), max(model.sem.T1.error.count), sd(model.sem.T1.error.count),
                         mean(model.sem.T2.error.count), min(model.sem.T2.error.count), max(model.sem.T2.error.count),
                         sd(model.sem.T2.error.count))
-results.var.vector <- c(repetitions, length(data.test[,1]), injection.size, model.var.pre.error.count, 
+results.var.vector <- c(model.var.mape, repetitions, length(data.test[,1]), injection.size, model.var.pre.error.count, 
                         mean(model.var.T1.error.count), min(model.var.T1.error.count), max(model.var.T1.error.count), sd(model.var.T1.error.count),
                         mean(model.var.T2.error.count), min(model.var.T2.error.count), max(model.var.T2.error.count),
                         sd(model.var.T2.error.count))
-results.rvar.vector <- c(repetitions, length(data.test[,1]), injection.size, model.rvar.pre.error.count, 
+results.rvar.vector <- c(model.rvar.mape, repetitions, length(data.test[,1]), injection.size, model.rvar.pre.error.count, 
                          mean(model.rvar.T1.error.count), min(model.rvar.T1.error.count), max(model.rvar.T1.error.count), sd(model.rvar.T1.error.count),
                          mean(model.rvar.T2.error.count), min(model.rvar.T2.error.count), max(model.rvar.T2.error.count),
                          sd(model.rvar.T2.error.count))
+results.arima.vector <- c(model.arima.mape, repetitions, length(data.test[,1]), injection.size, model.arima.pre.error.count, 
+                          mean(model.arima.T1.error.count),  min(model.arima.T1.error.count), max(model.arima.T1.error.count), sd(model.arima.T1.error.count),
+                          mean(model.arima.T2.error.count), min(model.arima.T2.error.count), max(model.arima.T2.error.count),
+                          sd(model.arima.T2.error.count))
 results.combi.vector <- c(repetitions, length(data.test[,1]), injection.size, model.combi.pre.error.count, 
                           mean(model.combi.T1.error.count), min(model.combi.T1.error.count), max(model.combi.T1.error.count), sd(model.combi.T1.error.count),
                           mean(model.combi.T2.error.count), min(model.combi.T2.error.count), max(model.combi.T2.error.count),
                           sd(model.combi.T2.error.count))
 results.combi2.vector <- c(repetitions, length(data.test[,1]), injection.size, model.combi2.pre.error.count, 
-                          mean(model.combi2.T1.error.count), min(model.combi2.T1.error.count), max(model.combi2.T1.error.count), sd(model.combi2.T1.error.count),
-                          mean(model.combi2.T2.error.count), min(model.combi2.T2.error.count), max(model.combi2.T2.error.count),
-                          sd(model.combi2.T2.error.count))
-results.arima.vector <- c(repetitions, length(data.test[,1]), injection.size, model.arima.pre.error.count, 
-                          mean(model.arima.T1.error.count),  min(model.arima.T1.error.count), max(model.arima.T1.error.count), sd(model.arima.T1.error.count),
-                          mean(model.arima.T2.error.count), min(model.arima.T2.error.count), max(model.arima.T2.error.count),
-                          sd(model.arima.T2.error.count))
+                           mean(model.combi2.T1.error.count), min(model.combi2.T1.error.count), max(model.combi2.T1.error.count), sd(model.combi2.T1.error.count),
+                           mean(model.combi2.T2.error.count), min(model.combi2.T2.error.count), max(model.combi2.T2.error.count),
+                           sd(model.combi2.T2.error.count))
 results.final.df <- data.frame(results.lrm.vector, results.sem.vector, results.var.vector, results.rvar.vector,
                                results.arima.vector, results.combi.vector, results.combi2.vector)
 names(results.final.df) <- c("LRM", "SEM", "VAR", "RVAR", "ARIMA", "Combi ARIMA", "Combi VAR")
-row.names(results.final.df) <- c("Repetitions", "N", "Injected anomalies", "Pre-test anomalies", "T1 mean", "T1 min", "T1 max", "T1 sd",
+row.names(results.final.df) <- c("MAPE", "Repetitions", "N", "Injected anomalies", "Pre-test anomalies", "T1 mean", "T1 min", "T1 max", "T1 sd",
                                  "T2 mean", "T2 min", "t2 max", "T2 sd")
 
 # Print results to screen

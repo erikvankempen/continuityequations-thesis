@@ -98,6 +98,3 @@ for( i in 1:repetitions){
   model.combi.T2.error.count <- c(model.combi.T2.error.count, nrow(subset(data.test.injected[sample.selection,], Actual >= rvar.lwr & Actual <= rvar.upr)))
   model.combi2.T2.error.count <- c(model.combi2.T2.error.count, nrow(subset(data.test.injected[sample.selection,], Actual >= rvar.lwr & Actual <= rvar.upr)))
 }
-
-# Print results to screen
-source('report.R')
