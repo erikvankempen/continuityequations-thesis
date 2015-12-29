@@ -7,7 +7,7 @@
 
 # RStudio files
 .Rproj.user/
-.Rproj
+*.Rproj
 .RData
 utilities.R
 
