@@ -7,7 +7,7 @@ require("tictoc")
 
 source('models.R')
 tic("Testing")
-for( i in seq( from=0, to=1, by=0.10 ) ) {
+for( i in seq( from=0, to=0.90, by=0.10 ) ) {
   injection.amplitude <- i
   source('test.R')
   source('report.R')
