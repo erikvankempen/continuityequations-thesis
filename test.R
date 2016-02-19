@@ -7,7 +7,7 @@ require("vars")
 require("tseries")
 require("forecast")
 
-# Determine number of detected anomalies prior to error injection
+# Preset variables
 data.test <- data.validation
 injection.size <- 10
 repetitions <- 1000
@@ -77,9 +77,9 @@ for( i in 1:repetitions){
   # Select (10) random samples
   sample.selection <- sample( seq( 1, nrow( data.test ) ), injection.size )
   
-  # Set selected observations to 0
+  # Alter selected observations to introduce anomalies
   data.test.injected <- data.test.results
-  data.test.injected$Actual[sample.selection] <- 0
+  data.test.injected$Actual[sample.selection] <- injection.amplitude * data.test.injected$Actual[sample.selection]
   
   # Count Type I errors, i.e. data (not included in sample) does not comply with test interval
   model.lrm.T1.error.count <- c(model.lrm.T1.error.count, nrow(subset(data.test.injected[-sample.selection,], Actual <= lrm.lwr | Actual >= lrm.upr)))
